@@ -18,22 +18,23 @@ import (
 func constructAppsettingTable(srcRoot string) map[string]map[string]bool {
 	var appsettingTable map[string]map[string]bool
 	appsettingTable = make(map[string]map[string]bool)
-	appsettingRegex, _ := regexp.Compile("(appsettings.*.json)") // Appsetting regex
-	projects, err := ioutil.ReadDir(srcRoot)                     // Get all the .NET Projects
+	appsettingEnvironmentRegex, _ := regexp.Compile(`appsettings.(\S*).json`) // Appsetting regex
+	projects, err := ioutil.ReadDir(srcRoot)                                  // Get all the .NET Projects
 	checkIfError(err)
 	for _, project := range projects {
 		if project.IsDir() {
 			files, err := ioutil.ReadDir(srcRoot + "/" + project.Name()) // Get all the top level files in each project
 			checkIfError(err)
 			for _, file := range files {
-				if appsettingRegex.MatchString(file.Name()) {
+				if appsettingEnvironmentRegex.MatchString(file.Name()) {
 					var row map[string]bool
 					if appsettingTable[project.Name()] == nil {
 						row = make(map[string]bool)
 					} else {
 						row = appsettingTable[project.Name()]
 					}
-					row[file.Name()] = false
+					var environment = appsettingEnvironmentRegex.FindStringSubmatch(file.Name())[1]
+					row[environment] = false
 					appsettingTable[project.Name()] = row
 				}
 			}
@@ -46,24 +47,30 @@ func constructAppsettingTable(srcRoot string) map[string]map[string]bool {
 func populateTable(appsettingTable *map[string]map[string]bool, diffPath string) {
 	byt, _ := ioutil.ReadFile("example.diff")
 	diff, _ := diffparser.Parse(string(byt))
-	r, _ := regexp.Compile("(appsettings.*.json)")
+	appsettingEnvironmentRegex, _ := regexp.Compile(`appsettings.(\S*).json`)
+	projectNameRegex, _ := regexp.Compile(`\S\/(\S*).appsettings`)
 
 	for _, file := range diff.Files {
-		if r.MatchString(file.NewName) {
+		if appsettingEnvironmentRegex.MatchString(file.NewName) {
+			var environment = appsettingEnvironmentRegex.FindStringSubmatch(file.NewName)[1]
+			var project = projectNameRegex.FindStringSubmatch(file.NewName)[1]
+			(*appsettingTable)[project][environment] = true
 			//TODO: Regex match the project and appsetting then update the appsetting table accordinly
-			fmt.Printf("File: %q -> %q [%v]\n", file.OrigName, file.NewName, file.Mode)
+			fmt.Printf("File: %q\n", file.NewName)
+			fmt.Printf("Project: %q\n", project)
+			fmt.Printf("Environment: %q\n", environment)
 		}
 	}
 }
 
 // Given a map of projects and appsettings map[string]map[string]bool
 // return the equivalent markdown text
-func printTable(appsettingTable map[string]map[string]bool) string {
+func printTable(appsettingTable *map[string]map[string]bool) string {
 	var markdownTable strings.Builder
 
 	// Header
 	markdownTable.WriteString("| Startup | ")
-	for _, column := range appsettingTable {
+	for _, column := range *appsettingTable {
 		for appsettingName := range column {
 			markdownTable.WriteString(appsettingName)
 			markdownTable.WriteString(" | ")
@@ -74,7 +81,7 @@ func printTable(appsettingTable map[string]map[string]bool) string {
 
 	// Title Row
 	markdownTable.WriteString("|--|")
-	for _, column := range appsettingTable {
+	for _, column := range *appsettingTable {
 		for appsettingName := range column {
 			markdownTable.WriteString("--|")
 			appsettingName = appsettingName + ""
@@ -84,7 +91,7 @@ func printTable(appsettingTable map[string]map[string]bool) string {
 	markdownTable.WriteString("\n")
 
 	// Body
-	for row, column := range appsettingTable {
+	for row, column := range *appsettingTable {
 		markdownTable.WriteString("| ")
 		markdownTable.WriteString(row)
 		markdownTable.WriteString(" | ")
@@ -92,7 +99,7 @@ func printTable(appsettingTable map[string]map[string]bool) string {
 			if value {
 				markdownTable.WriteString(":new:")
 			} else {
-				markdownTable.WriteString(":new:")
+				markdownTable.WriteString("x")
 			}
 			markdownTable.WriteString(" | ")
 		}
@@ -127,6 +134,6 @@ func commentOnPr(message string) {
 func appsettings(repo string) {
 	appsettingTable := constructAppsettingTable(repo + "/src")
 	populateTable(&appsettingTable, repo)
-	//printTable(updatedAppsettingTable)
-	//commentOnPr("Testing")
+	printTable(&appsettingTable)
+	commentOnPr(printTable(&appsettingTable))
 }
