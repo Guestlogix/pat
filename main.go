@@ -10,8 +10,8 @@ import (
 var app = cli.NewApp()
 
 func info() {
-	app.Name = "TPP Pr Tools"
-	app.Usage = "CLI Tools for evaluating the PR submission."
+	app.Name = "PAT"
+	app.Usage = "CLI Tools for pipelines."
 	app.Author = "Guestlogix"
 	app.Version = "0.0.1"
 }

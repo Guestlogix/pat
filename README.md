@@ -1,9 +1,17 @@
-# Guestlogix PR Tools CLI
+# PAT
+### Pipeline Automation Tool
 
 ## Overview
 
-This repo represents some tooling utilized in Guestlogix ci systems to ensure that submitted PRs for the [TPP](Guestlogix/guest) are in fine form.
+This maintains a go based CLI tool to perform a number of automated actions in our pipelines.
 
-## Getting Started
+## Build locally
 
-`go install prtool`
+`go install github.com/guestlogix/pat`
+
+## Docker
+
+```
+docker build -t pat .
+docker run -it pat
+```
