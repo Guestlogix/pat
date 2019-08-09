@@ -36,10 +36,18 @@ func commands() {
 			Aliases:   []string{"r"},
 			Usage:     "Generates the release notes between two tags",
 			ArgsUsage: "<from> <to>",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "repo-path",
+					Value: ".",
+					Usage: "A path to the repository to generate the notes for",
+				},
+			},
 			Action: func(c *cli.Context) {
 				var from = c.Args().Get(0)
 				var to = c.Args().Get(1)
-				releasenotes(from, to)
+				var repoPath = c.String("repo-path")
+				releasenotes(repoPath, from, to)
 			},
 		},
 	}
