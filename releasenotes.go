@@ -10,14 +10,6 @@ import (
 	"gopkg.in/src-d/go-git.v4/plumbing/revlist"
 )
 
-// Returns a go-git repo object should a repository
-// exist at the specified filepath.
-func openRepo(path string) *git.Repository {
-	repo, err := git.PlainOpen(path)
-	checkIfError(err)
-	return repo
-}
-
 // Returns a go-git tag object should a specified tag exist within
 // the specified repository
 func tagRef(r *git.Repository, tag string) *plumbing.Reference {
