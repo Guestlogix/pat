@@ -33,19 +33,25 @@ func commands() {
 		},
 		{
 			Name:      "releasenotes",
-			Aliases:   []string{"r"},
+			Aliases:   []string{"rn"},
 			Usage:     "Generates the release notes between two tags",
 			ArgsUsage: "<path> <from> <to>",
+			Flags: []cli.Flag{
+				cli.StringFlag{Name: "output, o", Usage: "The filepath and file name to output the yml template to.", Value: "./issue.yml"},
+				cli.StringFlag{Name: "project, p", Usage: "The Jira project to create the issue on", Value: "RL"},
+			},
 			Action: func(c *cli.Context) {
 				var repoPath = c.Args().Get(0)
 				var from = c.Args().Get(1)
 				var to = c.Args().Get(2)
-				releasenotes(repoPath, from, to)
+				var filepath = c.String("output")
+				var project = c.String("project")
+				releasenotes(repoPath, from, to, filepath, project)
 			},
 		},
 		{
 			Name:      "releaseversion",
-			Aliases:   []string{"r"},
+			Aliases:   []string{"rv"},
 			Usage:     "Obtains the last semver tag in the git history",
 			ArgsUsage: "<path>",
 			Action: func(c *cli.Context) {
