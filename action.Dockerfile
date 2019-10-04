@@ -17,7 +17,7 @@ WORKDIR ${WORKDIR}
 COPY entry.sh /entry.sh
 
 # Install all the go tools
-RUN go get gopkg.in/Netflix-Skunkworks/go-jira.v1/cmd/jira
+RUN go get gopkg.in/Netflix-Skunkworks/go-jira.v1
 RUN go get -d ./...
 RUN go install github.com/guestlogix/pat
 
