@@ -1,13 +1,6 @@
 # action.yml
 name: 'PAT'
 description: 'Various Guestlogix Pipeline Automations'
-inputs:
-  arguments:  # id of input
-    description: 'arguments to the cli'
-    required: true
-    default: '--help'
 runs:
   using: 'docker'
-  image: 'action.Dockerfile'
-  args:
-    - ${{ inputs.arguments }}
+  image: 'Dockerfile'
