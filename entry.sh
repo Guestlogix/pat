@@ -1,2 +1,3 @@
 #!/bin/sh -l
-$1
+echo Obtaining Lastest Version
+pat --help
