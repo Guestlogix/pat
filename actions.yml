@@ -8,6 +8,6 @@ inputs:
     default: 'pat --help'
 runs:
   using: 'docker'
-  image: 'action.Dockerfile'
+  image: './actions/Dockerfile'
   args:
     - ${{ inputs.arguments }}
