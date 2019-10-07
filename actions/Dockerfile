@@ -15,5 +15,6 @@ ADD . ${PATDIR}
 RUN cd ${PATDIR} && go get -d ./...
 RUN go install github.com/guestlogix/pat
 
+WORKDIR /tmp
 COPY ./actions/entry.sh /tmp
-ENTRYPOINT ["tmp/entry.sh"]
+ENTRYPOINT ["/tmp/entry.sh"]
