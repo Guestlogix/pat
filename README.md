@@ -18,30 +18,6 @@ docker run -it pat
 
 ## Using the CLI
 `pat --help`
-```
-NAME:
-   PAT - CLI Tools for pipelines.
-
-USAGE:
-   appsettings [global options] command [command options] [arguments...]
-
-VERSION:
-   0.0.1
-
-AUTHOR:
-   Guestlogix
-
-COMMANDS:
-     appsettings, a      Generates a markdown report of altered appsettings and posts a comment on the github pr
-     releasenotes, rn    Generates the release notes between two tags
-     releaseversion, rv  Obtains the last semver tag in the git history
-     help, h             Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --help, -h     show help
-   --version, -v  print the version
-```
-
 
 ## Jira
 
@@ -75,6 +51,8 @@ jobs:
     - name: PAT
       id: pat
       uses: Guestlogix/pat@master
+      env:
+        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
       with:
         pipeline-command: '<YOUR_SCRIPT_NAME>'
 ```
