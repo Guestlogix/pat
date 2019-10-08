@@ -2,9 +2,9 @@
 name: 'PAT'
 description: 'Various Guestlogix Pipeline Automations'
 inputs:
-  arguments:  # id of input
+  pipeline-command:  # id of input
     description: 'The cli commands to run'
-    required: true
+    required: false
     default: 'pat --help'
 runs:
   using: 'docker'
