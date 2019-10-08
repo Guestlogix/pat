@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"gopkg.in/src-d/go-git.v4"
@@ -13,6 +14,12 @@ func checkIfError(err error) {
 		return
 	}
 	throwError(err.Error())
+}
+
+// Helper function to write byte array to file on disk
+func writeFile(contents []byte, filename string) {
+	err := ioutil.WriteFile(filename, contents, 0644)
+	checkIfError(err)
 }
 
 func throwError(msg string) {
