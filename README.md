@@ -81,6 +81,6 @@ jobs:
 
 Finally, update the chart below with the new functionality.
 
-| Name         | Key            | Arguments | Notes                                                                                                        |
+| Name         | Key            | ENV Vars | Notes                                                                                                        |
 |--------------|----------------|-----------|--------------------------------------------------------------------------------------------------------------|
-| Auto Version | `auto-version` |           | Finds the latest semantic version, then increments it according to the appropriate conventional commit name. |
+| Auto Version | `auto-version` | GITHUB_ACCESS_TOKEN  | Finds the latest semantic version, then increments it according to the appropriate conventional commit name. |
