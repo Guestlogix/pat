@@ -4,4 +4,4 @@ PATH=$PATH:/bin:/usr/bin:/go/bin
 export PATH
 # Run the desired action script
 echo "Running $1 Pipeline Script"
-./$1.sh
+/tmp/$1.sh
