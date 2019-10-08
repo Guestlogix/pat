@@ -9,6 +9,9 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  entrypoint: '["/tmp/entry.sh"]'
+  entrypoint: 'ENTRYPOINT ["/tmp/entry.sh"]'
   args:
     - ${{ inputs.pipeline-command }}
+branding:
+  icon: 'flag'  
+  color: 'green'
