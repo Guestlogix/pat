@@ -3,11 +3,11 @@ name: 'PAT'
 description: 'Various Guestlogix Pipeline Automations'
 inputs:
   pipeline-command:  # id of input
-    description: 'The cli commands to run'
+    description: 'The desired script to run in the action'
     required: false
     default: 'pat --help'
 runs:
   using: 'docker'
-  image: './actions/Dockerfile'
+  image: 'Dockerfile'
   args:
     - ${{ inputs.arguments }}

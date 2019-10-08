@@ -1,24 +1,26 @@
-####
-# Used when building the tool as a standalone image
-####
-FROM golang:1.12.7-alpine3.10
-
-ARG WORKDIR=/go/src/github.com/guestlogix/pat
-ARG JIRA_USER=hgoddard@guestlogix.com
-ARG JIRA_ENDPOINT=https://guestlogix.atlassian.net
-
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git
-
-RUN mkdir -p ${WORKDIR}
-ADD . ${WORKDIR}
-WORKDIR ${WORKDIR}
-
-# Install all the go tools
-RUN go get gopkg.in/Netflix-Skunkworks/go-jira.v1
-RUN go get -d ./...
-RUN go install github.com/guestlogix/pat
-
-# Initialize Jira
-ENV JIRA_USER=${JIRA_USER}
-ENV JIRA_ENDPOINT=${JIRA_ENDPOINT}
+############################
+# STEP 1 build executable binary
+############################
+FROM golang:alpine AS builder
+# Install git.
+# Git is required for fetching the dependencies.
+RUN apk update && apk add --no-cache git
+WORKDIR $GOPATH/src/guestlogix/pat/
+COPY . .
+# Fetch dependencies.
+# Using go get.
+RUN go get -d -v
+# Build the binary.
+RUN go build -o /go/bin/pat
+############################
+# STEP 2 build a small image
+############################
+FROM alpine
+# Add bash
+RUN apk update && apk add bash
+# Set tmp as workdir
+WORKDIR /tmp
+# Copy our static executable.
+COPY --from=builder /go/bin/pat /go/bin/pat
+# Copy our entry bash to route to proper script
+COPY ./actions/entry.sh /tmp/entry.sh
