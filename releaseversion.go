@@ -55,7 +55,7 @@ func latestSemverTag(repo *git.Repository) (string, error) {
 	return latestTagName, nil
 }
 
-// Outputs most recent semver tag in git history
+// Outputs the new semver tag if one is required, otherwise
 func releaseversion(repoPath string) {
 	repo := openRepo(repoPath)
 	tag, _ := latestSemverTag(repo)

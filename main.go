@@ -19,19 +19,6 @@ func info() {
 func commands() {
 	app.Commands = []cli.Command{
 		{
-			Name:      "appsettings",
-			Aliases:   []string{"a"},
-			Usage:     "Generates a markdown report of altered appsettings and posts a comment on the github pr",
-			ArgsUsage: "<diff>",
-			Flags: []cli.Flag{
-				cli.BoolFlag{Name: "markdown, m", Usage: "return the results as a markdown table"},
-			},
-			Action: func(c *cli.Context) {
-				var repo = c.Args().Get(0)
-				appsettings(repo)
-			},
-		},
-		{
 			Name:      "releasenotes",
 			Aliases:   []string{"rn"},
 			Usage:     "Generates the release notes between two tags",
