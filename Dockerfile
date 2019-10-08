@@ -23,6 +23,6 @@ WORKDIR /tmp
 # Copy our static executable.
 COPY --from=builder /go/bin/pat /go/bin/pat
 # Copy our entry bash to route to proper script
-COPY ./actions/entry.sh /tmp/entry.sh
+COPY ./actions /tmp
 # Entry
-ENTRYPOINT /tmp/entry.sh
+ENTRYPOINT ["/tmp/entry.sh"]

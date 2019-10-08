@@ -4,7 +4,7 @@ description: 'Various Guestlogix Pipeline Automations'
 inputs:
   pipeline-command:  # id of input
     description: 'The desired script to run in the action'
-    required: false
+    required: true
     default: 'pat --help'
 runs:
   using: 'docker'
