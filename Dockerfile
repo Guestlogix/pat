@@ -17,7 +17,7 @@ RUN go build -o /go/bin/pat
 ############################
 FROM alpine
 # Add bash
-RUN apk update && apk add bash
+RUN apk update && apk add bash && apk add curl
 # Set tmp as workdir
 WORKDIR /tmp
 # Copy our static executable.
