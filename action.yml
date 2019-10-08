@@ -9,7 +9,7 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  entrypoint: 'ENTRYPOINT ["/tmp/entry.sh"]'
+  # entrypoint: 'ENTRYPOINT ["/tmp/entry.sh"]' # idk why this doesn't work, would be nice to exclude entry from image so it can be used as a build step.
   args:
     - ${{ inputs.pipeline-command }}
 branding:

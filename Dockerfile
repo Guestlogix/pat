@@ -24,3 +24,5 @@ WORKDIR /tmp
 COPY --from=builder /go/bin/pat /go/bin/pat
 # Copy our entry bash to route to proper script
 COPY ./actions/entry.sh /tmp/entry.sh
+# Entry
+ENTRYPOINT /tmp/entry.sh
