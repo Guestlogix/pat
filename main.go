@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -33,12 +34,14 @@ func commands() {
 						cli.StringFlag{Name: "project, p", Usage: "The Jira project to create the issue on", Value: "RL"},
 					},
 					Action: func(c *cli.Context) {
-						var repoPath = c.Args().Get(0)
-						var from = c.Args().Get(1)
-						var to = c.Args().Get(2)
-						var filepath = c.String("output")
-						var project = c.String("project")
-						releasenotes(repoPath, from, to, filepath, project)
+						repo := openRepo(c.Args().Get(0))
+						sinceTag := semverFromString(c.Args().Get(1))
+						untilTag := semverFromString(c.Args().Get(2))
+						sinceRef := tagRef(repo, sinceTag)
+						untilRef := tagRef(repo, untilTag)
+						commits := commitsBetweenRefs(repo, sinceRef, untilRef)
+						notes := formatReleaseNotes(commits, sinceRef, untilRef, untilTag, c.String("project"))
+						writeFile(notes, c.String("output"))
 					},
 				},
 				{
@@ -47,18 +50,23 @@ func commands() {
 					Usage:     "Obtains the last semver tag in the git history",
 					ArgsUsage: "<path>",
 					Action: func(c *cli.Context) {
-						var repoPath = c.Args().Get(0)
-						releaseversion(repoPath)
+						repo := openRepo(c.Args().Get(0))
+						tag, _ := latestSemverTag(repo)
+						fmt.Println(tag.toString())
 					},
 				},
 				{
-					Name:      "nextver",
+					Name:      "next",
 					Aliases:   []string{"nv"},
 					Usage:     "Returns the next version number based on commit names",
 					ArgsUsage: "<path>",
 					Action: func(c *cli.Context) {
-						var repoPath = c.Args().Get(0)
-						nextversion(repoPath)
+						repo := openRepo(c.Args().Get(0))
+						currentSemver, _ := latestSemverTag(repo)
+						sinceRef := tagRef(repo, currentSemver)
+						commits := commitsBetweenRefs(repo, sinceRef, nil)
+						newSemver := semverBump(commits, currentSemver)
+						fmt.Println(newSemver.toString())
 					},
 				},
 			},
