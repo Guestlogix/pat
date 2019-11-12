@@ -6,10 +6,12 @@ FROM golang:alpine AS builder
 # Git is required for fetching the dependencies.
 RUN apk update && apk add --no-cache git
 WORKDIR $GOPATH/src/guestlogix/pat/
-COPY . .
 # Fetch dependencies.
-# Using go get.
-RUN go get -d -v
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+# Copy source code
+COPY . .
 # Build the binary.
 RUN go build -o /go/bin/pat
 ############################
